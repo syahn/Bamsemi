@@ -1,0 +1,61 @@
+html, body {
+    font-family: Helvetica, sans-serif;
+    height: 100%;
+    margin: 0 20px;
+    padding: 0;
+ }
+
+#header {
+    margin: 10px 0;
+}
+
+h1 {
+  display: inline-block;
+  color: #525454;
+  font-size: 1em;
+}
+
+.map-container {
+    height: 500px;
+}
+#map {
+    height: 100%;
+}
+
+
+#options-box {
+    
+    border: 1px solid #999;
+    border-radius: 3px;
+    height: 100%;
+    line-height: 35px;
+    padding: 10px 10px 30px 10px;
+    text-align: right;
+    width: 340px;
+  }
+
+
+/**/
+
+html,
+
+/*
+  .container {
+    height: 100%;
+    position: relative;
+  }*/
+
+  input {
+    font-size: 12px;
+  }
+
+
+
+  #hide-listings,
+  #show-listings {
+    width: 48%;
+  }
+
+
+
+</style>
