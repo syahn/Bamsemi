@@ -1,5 +1,3 @@
-
-
 var Cafe = function(data) {
     this.class = ko.observable(data.class);
     this.title = ko.observable(data.title);
@@ -11,17 +9,26 @@ var Cafe = function(data) {
 
 
 function ViewModel() {
-    "use strict";
-    // Data
     var self = this;
 
     self.cafes = ko.observableArray([]);
 
     for (var i=0; i<locations.length; i++){
-        // console.log(cafe);
         self.cafes.push(new Cafe(locations[i]));
     }
 
-}
+    self.focusList = function(place) {
+        var index = self.cafes.indexOf(place);
+        markers[index].setAnimation(google.maps.Animation.BOUNCE);
+    };
 
-ko.applyBindings(new ViewModel());
+    self.unfocusList = function(place) {
+        var index = self.cafes.indexOf(place);
+        markers[index].setAnimation(null);
+    };
+
+    self.openInfoWindow = function(place) {
+        var index = self.cafes.indexOf(place);
+        populateInfoWindow(markers[index], infoWindow);
+    };
+}
