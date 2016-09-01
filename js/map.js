@@ -1,36 +1,42 @@
-
 var map;
-
 var markers = [];
-
 var placeMarkers = [];
 
 function initMap() {
-  // Constructor creates a new map - only center and zoom are required.
-  // var styles = [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}];
+    // "use strict";
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 37.566535, lng: 126.977969},
-    zoom: 12,
-    // styles: styles,
-    mapTypeControl: false
-  });
+    // Constructor creates a new map - only center and zoom are required.
+    // var styles = [{"elementType":"geometry","stylers":[{"hue":"#ff4400"},{"saturation":-68},{"lightness":-4},{"gamma":0.72}]},{"featureType":"road","elementType":"labels.icon"},{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"hue":"#0077ff"},{"gamma":3.1}]},{"featureType":"water","stylers":[{"hue":"#00ccff"},{"gamma":0.44},{"saturation":-33}]},{"featureType":"poi.park","stylers":[{"hue":"#44ff00"},{"saturation":-23}]},{"featureType":"water","elementType":"labels.text.fill","stylers":[{"hue":"#007fff"},{"gamma":0.77},{"saturation":65},{"lightness":99}]},{"featureType":"water","elementType":"labels.text.stroke","stylers":[{"gamma":0.11},{"weight":5.6},{"saturation":99},{"hue":"#0091ff"},{"lightness":-86}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"lightness":-48},{"hue":"#ff5e00"},{"gamma":1.2},{"saturation":-23}]},{"featureType":"transit","elementType":"labels.text.stroke","stylers":[{"saturation":-64},{"hue":"#ff9100"},{"lightness":16},{"gamma":0.47},{"weight":2.7}]}];
+    var pyrmont = {lat: 37.566535, lng: 126.977969};
+    var self = this;
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: pyrmont,
+        zoom: 12,
+        // styles: styles,
+        mapTypeControl: false
+    });
 
     var infoWindow = new google.maps.InfoWindow();
+    geocoder = new google.maps.Geocoder();
+
     setMarkers(map, infoWindow);
     addYourLocationButton(map);
 
+    // Initialize the markers on the landing-page
     showListings();
 
 
-
     // Create a searchbox in order to execute a places search
-
     var searchBox = new google.maps.places.SearchBox(
         document.getElementById('places-search'));
     // Bias the searchbox to within the bounds of the map.
-    searchBox.setBounds(map.getBounds());
+    // searchBox.setBounds(map.getBounds());
 
+    // Bias the SearchBox results towards current map's viewport.
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
 
     // Listen for the event fired when the user selects a prediction from the
     // picklist and retrieve more details for that place.
@@ -38,17 +44,21 @@ function initMap() {
         searchBoxPlaces(this);
     });
 
+
+
+
     // Listen for the event fired when the user selects a prediction and clicks
     // "go" more details for that place.
     document.getElementById('go-places').addEventListener('click', textSearchPlaces);
     document.getElementById('show-listings').addEventListener('click', showListings);
     document.getElementById('hide-listings').addEventListener('click', function() {
-          hideMarkers(markers);
-        });
+        hideMarkers(markers);
+    });
 }
 
-function addYourLocationButton(map)
-{
+
+//This function activate button to find user's location
+function addYourLocationButton(map) {
     var controlDiv = document.createElement('div');
 
     var firstChild = document.createElement('button');
@@ -82,22 +92,20 @@ function addYourLocationButton(map)
 
     firstChild.addEventListener('click', function() {
         var imgX = '0';
-        var animationInterval = setInterval(function(){
-            if(imgX == '-18') imgX = '0';
+        var animationInterval = setInterval(function() {
+            if (imgX == '-18') imgX = '0';
             else imgX = '-18';
-            $('#you_location_img').css('background-position', imgX+'px 0px');
+            $('#you_location_img').css('background-position', imgX + 'px 0px');
         }, 500);
-        if(navigator.geolocation) {
+        if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                // marker.setPosition(latlng);
                 map.setCenter(latlng);
                 map.setZoom(15);
                 clearInterval(animationInterval);
                 $('#you_location_img').css('background-position', '-144px 0px');
             });
-        }
-        else{
+        } else {
             clearInterval(animationInterval);
             $('#you_location_img').css('background-position', '0px 0px');
         }
@@ -107,20 +115,12 @@ function addYourLocationButton(map)
     map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
 }
 
+// Style the markers a bit. This will be our listing marker icon.
+function setMarkers(map, infowindow) {
 
-function setMarkers(map, infowindow){
-
-      // Style the markers a bit. This will be our listing marker icon.
-    //   var defaultIcon = makeMarkerIcon();
-
-      // Create a "highlighted location" marker color for when th user
-      // mouses over the marker.
-      var highlightedIcon = makeMarkerIcon('FFFF24');
-
-
-      // The following group uses the location array to create an array of markers on initialize.
-      for (var i = 0; i < locations.length; i++) {
-        // Get the position from the location array.
+    // The following group uses the location array to create an array of markers on initialize.
+    for (var i = 0; i < locations.length; i++) {
+        // Get the information from the location array.
         var position = locations[i].location;
         var title = locations[i].title;
         var contact = locations[i].contact;
@@ -131,32 +131,30 @@ function setMarkers(map, infowindow){
 
         var defaultIcon = makeMarkerIcon(cafeLogo);
 
-
         // Create a marker per location, and put into markers array.
         var marker = new google.maps.Marker({
-          position: position,
-          title: title,
-          icon: defaultIcon,
-          animation: google.maps.Animation.DROP,
-          contact: contact,
-          img: img,
-          id: i
+            position: position,
+            title: title,
+            icon: defaultIcon,
+            animation: google.maps.Animation.DROP,
+            contact: contact,
+            img: img,
+            id: i
         });
 
         // Push the marker to our array of markers.
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
-          populateInfoWindow(this, infowindow);
-      });
+            populateInfoWindow(this, infowindow);
+        });
         marker.addListener('mouseover', function() {
             this.setAnimation(google.maps.Animation.BOUNCE);
         });
         marker.addListener('mouseout', function() {
             this.setAnimation(null);
-            // this.setIcon(defaultIcon);
         });
-      }
+    }
 }
 
 
@@ -165,122 +163,140 @@ function setMarkers(map, infowindow){
 // one infowindow which will open at the marker that is clicked, and populate based
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
-  // Check to make sure the infowindow is not already opened on this marker.
-  if (infowindow.marker != marker) {
-    infowindow.marker = marker;
-    infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' + '<img id="image-marker" src="' + marker.img + '">');
-    infowindow.open(map, marker);
-    // Make sure the marker property is cleared if the infowindow is closed.
-    infowindow.addListener('closeclick', function() {
-      infowindow.marker = null;
-    });
+    // Check to make sure the infowindow is not already opened on this marker.
+    if (infowindow.marker != marker) {
+        infowindow.marker = marker;
+        infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' + '<img id="image-marker" src="' + marker.img + '">');
+        infowindow.open(map, marker);
+        // Make sure the marker property is cleared if the infowindow is closed.
+        infowindow.addListener('closeclick', function() {
+            infowindow.marker = null;
+        });
 
     }
-  }
+}
 
 
 // This function will loop through the markers array and display them all.
 function showListings() {
-  var bounds = new google.maps.LatLngBounds();
-  // Extend the boundaries of the map for each marker and display the marker
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-    bounds.extend(markers[i].position);
-  }
-  map.fitBounds(bounds);
+    var bounds = new google.maps.LatLngBounds();
+    // Extend the boundaries of the map for each marker and display the marker
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(map);
+        bounds.extend(markers[i].position);
+    }
+    map.fitBounds(bounds);
 }
 
 // This function will loop through the listings and hide them all.
 function hideMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
+    for (var i = 0; i < markers.length; i++) {
+        markers[i].setMap(null);
+    }
 }
 
 function makeMarkerIcon(logo) {
     var markerImage = new google.maps.MarkerImage(
-          logo,
-          new google.maps.Size(32, 32),
-          new google.maps.Point(0, 0),
-          new google.maps.Point(10, 34),
-          new google.maps.Size(32,32));
-        return markerImage;
+        logo,
+        new google.maps.Size(32, 32),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(10, 34),
+        new google.maps.Size(32, 32));
+    return markerImage;
 }
 
 
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-                        'Error: The Geolocation service failed.' :
-                        'Error: Your browser doesn\'t support geolocation.');
+    infoWindow.setPosition(pos);
+    infoWindow.setContent(browserHasGeolocation ?
+        'Error: The Geolocation service failed.' :
+        'Error: Your browser doesn\'t support geolocation.');
 }
 
 // This function fires when the user selects a searchbox picklist item.
-    // It will do a nearby search using the selected query string or place.
-    function searchBoxPlaces(searchBox) {
-      hideMarkers(placeMarkers);
-      var places = searchBox.getPlaces();
-      if (places.length === 0) {
+// It will do a nearby search using the selected query string or place.
+function searchBoxPlaces(searchBox) {
+    hideMarkers(placeMarkers);
+    var places = searchBox.getPlaces();
+    if (places.length === 0) {
         window.alert('We did not find any places matching that search!');
-      } else {
-      // For each place, get the icon, name and location.
+    } else {
+        // For each place, get the icon, name and location.
         createMarkersForPlaces(places);
-      }
     }
+}
 
-    // This function firest when the user select "go" on the places search.
-    // It will do a nearby search using the entered query string or place.
-    function textSearchPlaces() {
-      var bounds = map.getBounds();
-      hideMarkers(placeMarkers);
-      var placesService = new google.maps.places.PlacesService(map);
-      placesService.textSearch({
+// This function firest when the user select "go" on the places search.
+// It will do a nearby search using the entered query string or place.
+function textSearchPlaces() {
+    var bounds = map.getBounds();
+    // hideMarkers(placeMarkers);
+    var placesService = new google.maps.places.PlacesService(map);
+    placesService.textSearch({
         query: document.getElementById('places-search').value,
         bounds: bounds
-      }, function(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-          createMarkersForPlaces(results);
-        }
-      });
-    }
 
-    function createMarkersForPlaces(places) {
-            var bounds = new google.maps.LatLngBounds();
-            for (var i = 0; i < places.length; i++) {
-              var place = places[i];
-              var icon = {
-                url: place.icon,
-                size: new google.maps.Size(35, 35),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(15, 34),
-                scaledSize: new google.maps.Size(25, 25)
-              };
-              // Create a marker for each place.
-              var marker = new google.maps.Marker({
-                map: map,
-                icon: icon,
-                title: place.name,
-                position: place.geometry.location,
-                id: place.place_id
-              });
-              // Create a single infowindow to be used with the place details information
-              // so that only one is open at once.
-              var placeInfoWindow = new google.maps.InfoWindow();
-              // If a marker is clicked, do a place details search on it in the next function.
-              marker.addListener('click', function() {
-                if (placeInfoWindow.marker == this) {
-                  console.log("This infowindow already is on this marker!");
-                } else {
-                  getPlacesDetails(this, placeInfoWindow);
-                }
-              });
-              placeMarkers.push(marker);
-              if (place.geometry.viewport) {
-                // Only geocodes have viewport.
-                bounds.union(place.geometry.viewport);
-              } else {
-                bounds.extend(place.geometry.location);
-              }
-            }
-            map.fitBounds(bounds);
-          }
+    }, function(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            createMarkersForPlaces(results);
+        }
+    });
+}
+
+
+function createMarkersForPlaces(places) {
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0; i < places.length; i++) {
+        var place = places[i];
+        var icon = {
+            url: place.icon,
+            size: new google.maps.Size(35, 35),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(15, 34),
+            scaledSize: new google.maps.Size(25, 25)
+        };
+        // Create a marker for each place.
+        var marker = new google.maps.Marker({
+            map: map,
+            icon: icon,
+            title: place.name,
+            position: place.geometry.location,
+            id: place.place_id
+        });
+        // Create a single infowindow to be used with the place details information
+        // so that only one is open at once.
+        // var placeInfoWindow = new google.maps.InfoWindow();
+        // // If a marker is clicked, do a place details search on it in the next function.
+        // marker.addListener('click', function() {
+        //     if (placeInfoWindow.marker == this) {
+        //         console.log("This infowindow already is on this marker!");
+        //     } else {
+        //         getPlacesDetails(this, placeInfoWindow);
+        //     }
+        // });
+        placeMarkers.push(marker);
+        if (place.geometry.viewport) {
+            // Only geocodes have viewport.
+            bounds.union(place.geometry.viewport);
+        } else {
+            bounds.extend(place.geometry.location);
+        }
+    }
+    map.fitBounds(bounds);
+}
+//
+function codeAddress() {
+    var address = document.getElementById('places-search').value;
+    geocoder.geocode( { 'address': address}, function(results, status) {
+      if (status == 'OK') {
+          return results[0].geometry.location;
+        // map.setCenter(results[0].geometry.location);
+        // var marker = new google.maps.Marker({
+        //     map: map,
+        //     position: results[0].geometry.location
+        // });
+      } else {
+        alert('Geocode was not successful for the following reason: ' + status);
+      }
+    });
+  }

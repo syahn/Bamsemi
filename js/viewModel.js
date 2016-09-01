@@ -11,7 +11,7 @@ var Cafe = function(data) {
 
 
 function ViewModel() {
-
+    "use strict";
     // Data
     var self = this;
 
