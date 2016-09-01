@@ -31,7 +31,7 @@ function initMap(){
     var searchBox = new google.maps.places.SearchBox(
         document.getElementById('places-search'));
     // Bias the searchbox to within the bounds of the map.
-    // searchBox.setBounds(map.getBounds());
+    searchBox.setBounds(map.getBounds());
 
     // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function() {
@@ -112,7 +112,7 @@ function addYourLocationButton(map) {
     });
 
     controlDiv.index = 1;
-    map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(controlDiv);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
 }
 
 // Style the markers a bit. This will be our listing marker icon.
@@ -125,6 +125,7 @@ function setMarkers(map, infowindow) {
         var title = locations[i].title;
         var contact = locations[i].contact;
         var img = locations[i].img;
+        var address = locations[i].address;
 
         var cafeClass = locations[i].class;
         var cafeLogo = logos[cafeClass];
@@ -138,6 +139,7 @@ function setMarkers(map, infowindow) {
             icon: defaultIcon,
             animation: google.maps.Animation.DROP,
             contact: contact,
+            address: address,
             img: img,
             id: i
         });
@@ -148,6 +150,7 @@ function setMarkers(map, infowindow) {
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function() {
             populateInfoWindow(this, infowindow);
+            vm.selectMarker(this);
         });
         marker.addListener('mouseover', function() {
             this.setAnimation(google.maps.Animation.BOUNCE);
