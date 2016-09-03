@@ -82,6 +82,6 @@ var locations = [
 ];
 
 var logos = {
-    "hollys" : "img/logo_hollys.png",
-    "tomntoms" : "img/logo_tomntoms.png"
+    "hollys" : "image/logo_hollys.png",
+    "tomntoms" : "image/logo_tomntoms.png"
 };

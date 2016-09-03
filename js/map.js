@@ -1,14 +1,23 @@
-var map;
-var markers = [];
+var map,
+    markers = [],
+    placeMarkers = [];
+var venue = [];
+
 
 // Markers queried
-var placeMarkers = [];
+function mapError() {
+    alert("Sorry, map could not be loaded");
+}
 
-function initMap(){
+
+function initMap() {
     // "use strict";
 
     // Constructor creates a new map - only center and zoom are required.
-    var pyrmont = {lat: 37.566535, lng: 126.977969};
+    var pyrmont = {
+        lat: 37.566535,
+        lng: 126.977969
+    };
     // var self = this;
 
     map = new google.maps.Map(document.getElementById('map'), {
@@ -35,7 +44,7 @@ function initMap(){
 
     // Bias the SearchBox results towards current map's viewport.
     map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
+        searchBox.setBounds(map.getBounds());
     });
 
     // Listen for the event fired when the user selects a prediction from the
@@ -53,7 +62,7 @@ function initMap(){
         hideMarkers(markers);
     });
 
-    ko.applyBindings( new ViewModel() );
+    ko.applyBindings(new ViewModel());
 }
 
 
@@ -121,6 +130,7 @@ function setMarkers(map, infowindow) {
     // The following group uses the location array to create an array of markers on initialize.
     for (var i = 0; i < locations.length; i++) {
         // Get the information from the location array.
+        var index = i;
         var position = locations[i].location;
         var title = locations[i].title;
         var contact = locations[i].contact;
@@ -141,6 +151,7 @@ function setMarkers(map, infowindow) {
             contact: contact,
             address: address,
             img: img,
+            index: i,
             id: i
         });
 
@@ -168,10 +179,51 @@ function setMarkers(map, infowindow) {
 // on that markers position.
 function populateInfoWindow(marker, infowindow) {
     // Check to make sure the infowindow is not already opened on this marker.
+
     if (infowindow.marker != marker) {
         infowindow.marker = marker;
-        infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' + '<img id="image-marker" src="' + marker.img + '">');
-        infowindow.open(map, marker);
+        // var latlng = marker.position.toUrlValue();// +','+ position.lng.toString();
+        // var venue =[];
+        // console.log(venue);
+
+        // infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' +
+        //                       '<img id="image-marker" src="' + marker.img + '"><div><p>Nearby hot place</p><span id="titleFourSquare"></span><p id="tipFourSquare"></p><a id="urlFourSquare href="">Link</a></div>');
+        var $titleElem = $('#titleFourSquare');
+        var $tipElem = $('#tipFourSquare');
+        var $urlElem = $('#urlFourSquare');
+
+        this.urlFoursquare = "https://api.foursquare.com/v2/venues/explore";
+        this.urlFoursquare += '?' + $.param({
+            'client_id': 'T51K4CHANN5MBOX5DA2ANBWHRUS54LYEKTQY2KO3U4GSRFDP',
+            'client_secret': 'SXWDCUMXYS2EDYVYHSTXWCVLOAGW0MWQTX4WBAO2F2KVNQ5C',
+            'll': marker.position.toUrlValue(),
+            'v': '20140806'
+        });
+
+        $.ajax({
+            url: this.urlFoursquare,
+            dataType: 'json',
+            success: function(data) {
+                var element = data.response.groups[0].items[0];
+                var venue = element.venue.name;
+                var tip = element.tips[0].text;
+                var url = element.tips[0].canonicalUrl;
+
+                infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' +
+                    '<img id="image-marker" src="' + marker.img + '"><div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
+                    '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
+
+                $titleElem.html(venue);
+                $tipElem.text = tip;
+                $tipElem.attr("href", url);
+                infowindow.open(map, marker);
+
+            }
+        }).fail(function() {
+            alert("error");
+        });
+
+
         // Make sure the marker property is cleared if the infowindow is closed.
         infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
@@ -179,6 +231,13 @@ function populateInfoWindow(marker, infowindow) {
 
     }
 }
+
+
+function requestFoursquare(marker) {
+
+}
+
+
 
 
 // This function will loop through the markers array and display them all.
