@@ -73,7 +73,7 @@
 
     <!--   Core JS Files   -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/jquery/dist/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="js/material.min.js"></script> -->
 
     <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
@@ -81,10 +81,11 @@
 
     <script src="bower_components/knockout/dist/knockout.js"></script>
     <script src="js/model.js"></script>
-    <script src="js/fourSquare.js"></script>
-    <script src="js/map.js"></script>
     <script src="js/viewModel.js"></script>
-    <script async src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA0dHW4hkoNScCvk3Gbq0X-XswWHZdXugE&v=3&callback=initMap" onerror="mapError()">
+    <script src="js/map.js"></script>
+    <script src="js/app.js"></script>
+
+    <script async src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA0dHW4hkoNScCvk3Gbq0X-XswWHZdXugE&v=3&callback=app.init" onerror="app.errorHandler()">
     </script>
 
 </body>

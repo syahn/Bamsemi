@@ -1,4 +1,6 @@
-var locations = [
+var app = app || {};
+
+app.locations = [
     {
         class: 'hollys',
         title: '연신내점',
@@ -81,7 +83,7 @@ var locations = [
     }
 ];
 
-var logos = {
+app.logos = {
     "hollys" : "image/logo_hollys.png",
     "tomntoms" : "image/logo_tomntoms.png"
 };
