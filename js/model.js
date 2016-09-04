@@ -15,7 +15,7 @@ app.Model = function() {
     self.init = function() {
 
         var locationRef = firebase.database().ref('/locations');
-        // console.log(locationRef);
+
         locationRef.on('value', function(snapshot) {
             var cafes = snapshot.val();
             for (var cafe in cafes) {
@@ -23,8 +23,7 @@ app.Model = function() {
                     self.locations.push(cafes[cafe]);
                 }
             }
-            // self.locationLength = self.locations.length;
-            // console.log(self.locationLength);
+
             app.mv.initMap();
             ko.applyBindings(app.vm);
             });

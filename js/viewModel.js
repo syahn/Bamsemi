@@ -10,31 +10,31 @@ app.ViewModel = function() {
 
     self.focusList = function(place) {
         var index = self.findMarkerIndex(place);
-        app.markers[index].setAnimation(google.maps.Animation.BOUNCE);
+        app.mv.markers[index].setAnimation(google.maps.Animation.BOUNCE);
     };
 
     self.unfocusList = function(place) {
         var index = self.findMarkerIndex(place);
-        app.markers[index].setAnimation(null);
+        app.mv.markers[index].setAnimation(null);
     };
 
     self.openInfoWindow = function(place) {
         var index = self.findMarkerIndex(place);
-        app.mv.populateInfoWindow(app.markers[index], app.infoWindow);
+        app.mv.populateInfoWindow(app.mv.markers[index], app.mv.infoWindow);
     };
 
     self.findMarkerIndex = function(place) {
         return self.cafes.indexOf(place);
     };
 
-    self.disableList = function(){
-        for (var i=0; i < self.allCafes().length ; i++){
-            self.allCafes()[i].visible(null);
-        }
-    };
-
-    self.selectMarker = function(marker){
-        var index = marker.index;
-        self.disableList();
-    };
+    // self.disableList = function(){
+    //     for (var i=0; i < self.allCafes().length ; i++){
+    //         self.allCafes()[i].visible(null);
+    //     }
+    // };
+    //
+    // self.selectMarker = function(marker){
+    //     var index = marker.index;
+    //     self.disableList();
+    // };
 };

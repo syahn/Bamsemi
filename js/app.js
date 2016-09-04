@@ -5,8 +5,8 @@ app.init = function() {
     "use strict";
 
     app.model = new app.Model();
-    app.vm = new app.ViewModel();
     app.mv = new app.MapView();
+    app.vm = new app.ViewModel();
 
     app.model.init();
 };

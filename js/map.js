@@ -6,28 +6,33 @@ app.MapView = function(){
 
     var self = this;
 
-    app.markers = [];
-    app.placeMarkers = [];
-    app.map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
-        zoom: 12,
-        mapTypeControl: false
-    });
-    // Initiate infoWindow object.
-    app.infoWindow = new google.maps.InfoWindow();
-
     // This function nitialize the map
     self.initMap = function() {
-
+        self.markers = [];
+        self.placeMarkers = [];
+        self.map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
+            zoom: 12,
+            mapTypeControl: false,
+            zoomControlOptions: {
+              position: google.maps.ControlPosition.LEFT_CENTER
+            },
+            streetViewControl: true,
+            streetViewControlOptions: {
+              position: google.maps.ControlPosition.LEFT_TOP
+            }
+        });
+        // Initiate infoWindow object.
+        self.infoWindow = new google.maps.InfoWindow();
 
         // Activate markers and infowindow.
-        self.setMarkers(app.map);
+        self.setMarkers(self.map);
 
         // Add the search box.
-        self.addSearchBox(app.map);
+        self.addSearchBox(self.map);
 
         // Add geolocation icon on the map.
-        self.addYourLocationButton(app.map);
+        self.addYourLocationButton(self.map);
 
         // Initialize the markers on the landing-page.
         self.showListings();
@@ -37,7 +42,7 @@ app.MapView = function(){
         document.getElementById('go-places').addEventListener('click', self.textSearchPlaces);
         document.getElementById('show-listings').addEventListener('click', self.showListings);
         document.getElementById('hide-listings').addEventListener('click', function() {
-            self.hideMarkers(app.markers);
+            self.hideMarkers(self.markers);
         });
     };
 
@@ -79,9 +84,9 @@ app.MapView = function(){
     // This function firest when the user select "go" on the places search.
     // It will do a nearby search using the entered query string or place.
     self.textSearchPlaces = function() {
-        var bounds = app.map.getBounds();
+        var bounds = self.map.getBounds();
 
-        var placesService = new google.maps.places.PlacesService(app.map);
+        var placesService = new google.maps.places.PlacesService(self.map);
 
         placesService.textSearch({
             query: document.getElementById('places-search').value,
@@ -115,7 +120,7 @@ app.MapView = function(){
                 id: place.place_id
             });
 
-            app.placeMarkers.push(marker);
+            self.placeMarkers.push(marker);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
@@ -123,7 +128,7 @@ app.MapView = function(){
                 bounds.extend(place.geometry.location);
             }
         }
-        app.map.fitBounds(bounds);
+        self.map.fitBounds(bounds);
     };
 
 
@@ -155,11 +160,11 @@ app.MapView = function(){
                 img: img
             });
             // Push the marker to our array of markers.
-            app.markers.push(marker);
+            self.markers.push(marker);
 
             // Create an onclick event to open an infowindow at each marker.
             marker.addListener('click', function() {
-                self.populateInfoWindow(this, app.infoWindow);
+                self.populateInfoWindow(this, self.infoWindow);
             });
 
             marker.addListener('mouseover', function() {
@@ -221,7 +226,7 @@ app.MapView = function(){
                     $tipElem.text = tip;
                     $tipElem.attr("href", url);
 
-                    infowindow.open(app.map, marker);
+                    infowindow.open(self.map, marker);
                 }
             }).fail(function() {
                 alert("Somethings went wrong. Please, reload it.");
@@ -232,18 +237,25 @@ app.MapView = function(){
                 infowindow.marker = null;
             });
 
+            // Deactivate infowindow when show listing button get clicked.
+            document.getElementById('show-listings').addEventListener('click', function(){
+                infowindow.close();
+            });
         }
     };
 
     // This function will loop through the markers array and display them all.
     self.showListings =function() {
+        // Close infowindow which is already opened.
+        self.infoWindow.marker = null;
+
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < app.markers.length; i++) {
-            app.markers[i].setMap(app.map);
-            bounds.extend(app.markers[i].position);
+        for (var i = 0; i < self.markers.length; i++) {
+            self.markers[i].setMap(self.map);
+            bounds.extend(self.markers[i].position);
         }
-        app.map.fitBounds(bounds);
+        self.map.fitBounds(bounds);
     };
 
     // This function will loop through the listings and hide them all.
@@ -283,7 +295,7 @@ app.MapView = function(){
         secondChild.id = 'you_location_img';
         firstChild.appendChild(secondChild);
 
-        google.maps.event.addListener(app.map, 'dragend', function() {
+        google.maps.event.addListener(self.map, 'dragend', function() {
             $('#you_location_img').css('background-position', '0px 0px');
         });
 
@@ -297,8 +309,8 @@ app.MapView = function(){
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    app.map.setCenter(latlng);
-                    app.map.setZoom(15);
+                    self.map.setCenter(latlng);
+                    self.map.setZoom(15);
                     clearInterval(animationInterval);
                     $('#you_location_img').css('background-position', '-144px 0px');
                 });
@@ -309,6 +321,6 @@ app.MapView = function(){
         });
 
         controlDiv.index = 1;
-        map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+        map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlDiv);
     };
 };

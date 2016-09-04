@@ -6,27 +6,26 @@ app.MapView = function(){
 
     var self = this;
 
-    app.markers = [];
-    app.placeMarkers = [];
-    app.map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
-        zoom: 12,
-        mapTypeControl: false
-    });
-    // Initiate infoWindow object.
-    app.infoWindow = new google.maps.InfoWindow();
-
     // This function nitialize the map
     self.initMap = function() {
+        self.markers = [];
+        self.placeMarkers = [];
+        self.map = new google.maps.Map(document.getElementById('map'), {
+            center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
+            zoom: 12,
+            mapTypeControl: false
+        });
+        // Initiate infoWindow object.
+        self.infoWindow = new google.maps.InfoWindow();
+
         // Activate markers and infowindow.
-        console.log("hey");
-        self.setMarkers(app.map, app.infoWindow);
+        self.setMarkers(self.map);
 
         // Add the search box.
-        self.addSearchBox(app.map);
+        self.addSearchBox(self.map);
 
         // Add geolocation icon on the map.
-        self.addYourLocationButton(app.map);
+        self.addYourLocationButton(self.map);
 
         // Initialize the markers on the landing-page.
         self.showListings();
@@ -36,7 +35,7 @@ app.MapView = function(){
         document.getElementById('go-places').addEventListener('click', self.textSearchPlaces);
         document.getElementById('show-listings').addEventListener('click', self.showListings);
         document.getElementById('hide-listings').addEventListener('click', function() {
-            self.hideMarkers(app.markers);
+            self.hideMarkers(self.markers);
         });
     };
 
@@ -78,9 +77,9 @@ app.MapView = function(){
     // This function firest when the user select "go" on the places search.
     // It will do a nearby search using the entered query string or place.
     self.textSearchPlaces = function() {
-        var bounds = app.map.getBounds();
+        var bounds = self.map.getBounds();
 
-        var placesService = new google.maps.places.PlacesService(app.map);
+        var placesService = new google.maps.places.PlacesService(self.map);
 
         placesService.textSearch({
             query: document.getElementById('places-search').value,
@@ -114,7 +113,7 @@ app.MapView = function(){
                 id: place.place_id
             });
 
-            app.placeMarkers.push(marker);
+            self.placeMarkers.push(marker);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
@@ -122,29 +121,31 @@ app.MapView = function(){
                 bounds.extend(place.geometry.location);
             }
         }
-        app.map.fitBounds(bounds);
+        self.map.fitBounds(bounds);
     };
 
 
     //This function renders markers.
     self.setMarkers = function(map) {
         // The following group uses the location array to create an array of markers on initialize.
-        for (var i = 0; i < app.locations.length; i++){
+
+        var cafes = app.model.locations;
+        for (var i = 0; i < cafes.length; i++){
+
             // Get the information from the location array.
-            var position = app.locations[i].location;
-            var title = app.locations[i].title;
-            var contact = app.locations[i].contact;
-            var img = app.locations[i].img;
-            var address = app.locations[i].address;
-            var cafeClass = app.locations[i].class;
-            var cafeLogo = app.logos[cafeClass];
+            var position = new google.maps.LatLng(cafes[i].lat, cafes[i].lng);
+            var name = cafes[i].name;
+            var contact = cafes[i].contact;
+            var img = cafes[i].img;
+            var address = cafes[i].address;
+            var cafeClass = cafes[i].class;
+            var cafeLogo = app.model.logos[cafeClass];
             var defaultIcon = self.makeMarkerIcon(cafeLogo);
 
             // Create a marker per location, and put into markers array.
             var marker = new google.maps.Marker({
-                id: i,
                 position: position,
-                title: title,
+                title: name,
                 icon: defaultIcon,
                 animation: google.maps.Animation.DROP,
                 contact: contact,
@@ -152,13 +153,11 @@ app.MapView = function(){
                 img: img
             });
             // Push the marker to our array of markers.
-            console.log(app.markers);
-            app.markers.push(marker);
+            self.markers.push(marker);
 
             // Create an onclick event to open an infowindow at each marker.
             marker.addListener('click', function() {
-                app.populateInfoWindow(this, infowindow);
-                // app.ViewModel.selectMarker(this);
+                self.populateInfoWindow(this, self.infoWindow);
             });
 
             marker.addListener('mouseover', function() {
@@ -185,7 +184,7 @@ app.MapView = function(){
     };
 
     // This function populates the infowindow when the marker is clicked.
-    app.populateInfoWindow = function(marker, infowindow) {
+    self.populateInfoWindow = function(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
@@ -220,7 +219,7 @@ app.MapView = function(){
                     $tipElem.text = tip;
                     $tipElem.attr("href", url);
 
-                    infowindow.open(app.map, marker);
+                    infowindow.open(self.map, marker);
                 }
             }).fail(function() {
                 alert("Somethings went wrong. Please, reload it.");
@@ -238,11 +237,11 @@ app.MapView = function(){
     self.showListings =function() {
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < app.markers.length; i++) {
-            app.markers[i].setMap(app.map);
-            bounds.extend(app.markers[i].position);
+        for (var i = 0; i < self.markers.length; i++) {
+            self.markers[i].setMap(self.map);
+            bounds.extend(self.markers[i].position);
         }
-        app.map.fitBounds(bounds);
+        self.map.fitBounds(bounds);
     };
 
     // This function will loop through the listings and hide them all.
@@ -282,7 +281,7 @@ app.MapView = function(){
         secondChild.id = 'you_location_img';
         firstChild.appendChild(secondChild);
 
-        google.maps.event.addListener(app.map, 'dragend', function() {
+        google.maps.event.addListener(self.map, 'dragend', function() {
             $('#you_location_img').css('background-position', '0px 0px');
         });
 
@@ -296,8 +295,8 @@ app.MapView = function(){
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                    app.map.setCenter(latlng);
-                    app.map.setZoom(15);
+                    self.map.setCenter(latlng);
+                    self.map.setZoom(15);
                     clearInterval(animationInterval);
                     $('#you_location_img').css('background-position', '-144px 0px');
                 });
