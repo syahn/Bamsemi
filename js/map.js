@@ -18,9 +18,10 @@ app.MapView = function(){
 
     // This function nitialize the map
     self.initMap = function() {
+
+
         // Activate markers and infowindow.
-        console.log("hey");
-        self.setMarkers(app.map, app.infoWindow);
+        self.setMarkers(app.map);
 
         // Add the search box.
         self.addSearchBox(app.map);
@@ -129,22 +130,24 @@ app.MapView = function(){
     //This function renders markers.
     self.setMarkers = function(map) {
         // The following group uses the location array to create an array of markers on initialize.
-        for (var i = 0; i < app.locations.length; i++){
+
+        var cafes = app.model.locations;
+        for (var i = 0; i < cafes.length; i++){
+
             // Get the information from the location array.
-            var position = app.locations[i].location;
-            var title = app.locations[i].title;
-            var contact = app.locations[i].contact;
-            var img = app.locations[i].img;
-            var address = app.locations[i].address;
-            var cafeClass = app.locations[i].class;
-            var cafeLogo = app.logos[cafeClass];
+            var position = new google.maps.LatLng(cafes[i].lat, cafes[i].lng);
+            var name = cafes[i].name;
+            var contact = cafes[i].contact;
+            var img = cafes[i].img;
+            var address = cafes[i].address;
+            var cafeClass = cafes[i].class;
+            var cafeLogo = app.model.logos[cafeClass];
             var defaultIcon = self.makeMarkerIcon(cafeLogo);
 
             // Create a marker per location, and put into markers array.
             var marker = new google.maps.Marker({
-                id: i,
                 position: position,
-                title: title,
+                title: name,
                 icon: defaultIcon,
                 animation: google.maps.Animation.DROP,
                 contact: contact,
@@ -152,13 +155,11 @@ app.MapView = function(){
                 img: img
             });
             // Push the marker to our array of markers.
-            console.log(app.markers);
             app.markers.push(marker);
 
             // Create an onclick event to open an infowindow at each marker.
             marker.addListener('click', function() {
-                app.populateInfoWindow(this, infowindow);
-                // app.ViewModel.selectMarker(this);
+                self.populateInfoWindow(this, app.infoWindow);
             });
 
             marker.addListener('mouseover', function() {
@@ -185,7 +186,7 @@ app.MapView = function(){
     };
 
     // This function populates the infowindow when the marker is clicked.
-    app.populateInfoWindow = function(marker, infowindow) {
+    self.populateInfoWindow = function(marker, infowindow) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.marker = marker;

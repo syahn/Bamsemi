@@ -4,9 +4,11 @@ var app = app || {};
 app.init = function() {
     "use strict";
 
+    app.model = new app.Model();
+    app.vm = new app.ViewModel();
     app.mv = new app.MapView();
-    app.mv.initMap();
-    ko.applyBindings( new app.ViewModel() );
+
+    app.model.init();
 };
 
 

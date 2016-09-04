@@ -45,18 +45,16 @@
                         <input id="hide-listings" class="btn btn-warning" type="button" value="Hide Listings">
                     </div>
 
-                    <div class="item" data-bind="foreach:allCafes">
-						<!-- ko if: $data.visible -->
-                        <a href="#" class="item-title" data-bind="event: { mouseover: $parent.focusList, mouseout: $parent.unfocusList}, click: $parent.openInfoWindow, text: $data.title"></a>
+                    <div class="item" data-bind="foreach:cafes">
+                        <a href="#" class="item-title" data-bind="event: { mouseover: $parent.focusList, mouseout: $parent.unfocusList}, click: $parent.openInfoWindow, text: $data.name"></a>
                         <hr>
                         <div class="item-content">
                             <div class="item-text">
                                 <span class="item-address" data-bind="text: $data.address"></span>
                                 <span class="item-contact" data-bind="text: $data.contact"></span>
                             </div>
-                            <img class="item-img" src="" data-bind="attr: {src: img}" alt="Undefined">
+                            <img class="item-img" src="" data-bind="attr: {src: $data.img}" alt="Undefined">
                         </div>
-						<!-- /ko -->
                     </div>
                 </div>
             </div>
@@ -65,28 +63,8 @@
             </main>
             <!-- <aside></aside> -->
         </section>
-
-        <footer>
-
-        </footer>
+        <!-- <footer></footer> -->
     </div>
-
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
-
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyAJvHLBJ1eqeSGwrv2z2DsMaow1NFaW8lM",
-        authDomain: "bamsemi-efb21.firebaseapp.com",
-        databaseURL: "https://bamsemi-efb21.firebaseio.com",
-        storageBucket: "bamsemi-efb21.appspot.com",
-      };
-      firebase.initializeApp(config);
-    </script>
-
 
     <!--   Core JS Files   -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -95,11 +73,18 @@
 
     <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
     <script src="js/material-kit.js" type="text/javascript"></script>
-
     <script src="bower_components/knockout/dist/knockout.js"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.3.0/firebase-database.js"></script>
+
+    <script src="configure.js"></script>
+
     <script src="js/model.js"></script>
-    <script src="js/viewModel.js"></script>
     <script src="js/map.js"></script>
+    <script src="js/viewModel.js"></script>
     <script src="js/app.js"></script>
 
     <script async src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA0dHW4hkoNScCvk3Gbq0X-XswWHZdXugE&v=3&callback=app.init" onerror="app.errorHandler()"></script>
