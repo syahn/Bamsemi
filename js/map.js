@@ -14,14 +14,15 @@ app.MapView = function(){
             center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
             zoom: 12,
             mapTypeControl: false,
+            streetViewControlOptions: {
+            position: google.maps.ControlPosition.LEFT_TOP
+            },
             zoomControlOptions: {
               position: google.maps.ControlPosition.LEFT_CENTER
-            },
-            streetViewControl: true,
-            streetViewControlOptions: {
-              position: google.maps.ControlPosition.LEFT_TOP
             }
+
         });
+
         // Initiate infoWindow object.
         self.infoWindow = new google.maps.InfoWindow();
 
@@ -279,7 +280,7 @@ app.MapView = function(){
         firstChild.style.borderRadius = '2px';
         firstChild.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
         firstChild.style.cursor = 'pointer';
-        firstChild.style.marginRight = '10px';
+        firstChild.style.margin = '15px 0 0 10px';
         firstChild.style.padding = '0px';
         firstChild.title = 'Your Location';
         controlDiv.appendChild(firstChild);
@@ -321,6 +322,6 @@ app.MapView = function(){
         });
 
         controlDiv.index = 1;
-        map.controls[google.maps.ControlPosition.LEFT_TOP].push(controlDiv);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
     };
 };
