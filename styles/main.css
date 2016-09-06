@@ -109,10 +109,23 @@ form-group.form-control {
     width: 80%;
 }
 
+.filter-marker {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+
+.filter-marker label {
+    padding-left: 7px;
+}
+
 hr {
     margin: 0;
     padding: 4px 0;
 }
+
+
+
 
 .item {
     margin: 10px;
@@ -171,6 +184,12 @@ hr {
     }
     .options-box {
         height: 300px;
+    }
+    #show-listings {
+        font-size: 1em;
+    }
+    #hide-listings {
+        font-size: 1em;
     }
 
 }

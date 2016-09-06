@@ -27,7 +27,7 @@ app.MapView = function(){
         self.infoWindow = new google.maps.InfoWindow();
 
         // Activate markers and infowindow.
-        self.setMarkers(self.map);
+        self.setMarkers(self.map, app.model.locations);
 
         // Add the search box.
         self.addSearchBox(self.map);
@@ -134,10 +134,9 @@ app.MapView = function(){
 
 
     //This function renders markers.
-    self.setMarkers = function(map) {
+    self.setMarkers = function(map, cafes) {
         // The following group uses the location array to create an array of markers on initialize.
 
-        var cafes = app.model.locations;
         for (var i = 0; i < cafes.length; i++){
 
             // Get the information from the location array.
@@ -158,7 +157,8 @@ app.MapView = function(){
                 animation: google.maps.Animation.DROP,
                 contact: contact,
                 address: address,
-                img: img
+                img: img,
+                visible: true
             });
             // Push the marker to our array of markers.
             self.markers.push(marker);
