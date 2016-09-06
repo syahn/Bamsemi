@@ -6,8 +6,8 @@ app.ViewModel = function() {
 
     self.cafes = ko.observableArray(app.model.locations);
     self.showFilter = ko.observable(true);
+    self.buttonClass = ko.observable(false);
     self.currentFilter = ko.observableArray(["hollys","tomntoms","coffeesmith","individual"]);
-    self.filteredCafes = ko.observableArray();
 
     self.classes = ko.observableArray([
         {class: 'hollys'},
@@ -39,12 +39,36 @@ app.ViewModel = function() {
     };
 
     self.activateFilter = function(){
+        // infowindow.close();
+
         self.showCafes();
+
+
         return true;
     };
 
+    self.changeClass = function(){
+        self.buttonClass(!self.buttonClass());
+    };
+
+    self.eliminateDuplicates = function(arr) {
+      var i,
+          len=arr.length,
+          out=[],
+          obj={};
+
+      for (i=0;i<len;i++) {
+        obj[arr[i]]=0;
+      }
+      for (i in obj) {
+        out.push(i);
+      }
+      return out;
+    };
+
     self.showCafes = function(){
-        var result = [];
+        var result = [],
+            filteredCafes = [];
 
         if (self.currentFilter().length === 4){
             app.mv.markers.forEach(function(marker){
@@ -52,24 +76,24 @@ app.ViewModel = function() {
             });
             return self.cafes();
         } else {
-            console.log(self.currentFilter());
             self.currentFilter().forEach(function(filter){
-                console.log(filter);
                 for (var i = 0; i < self.cafes().length; i++){
                     app.mv.markers[i].setVisible(false);
                     var cafe = self.cafes()[i];
                     if (cafe.class === filter){
-                        self.filteredCafes.push(cafe);
+                        filteredCafes.push(cafe);
                         result.push(i);
                     }
                 }
             });
 
-            result.forEach(function(i){
+            self.eliminateDuplicates(result).forEach(function(i){
                 app.mv.markers[i].setVisible(true);
             });
 
-            return self.filteredCafes();
+            app.mv.infoWindow.close();
+
+            return filteredCafes;
         }
 
 

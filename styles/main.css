@@ -111,13 +111,44 @@ form-group.form-control {
 
 .filter-marker {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     font-weight: bold;
 }
 
 .filter-marker label {
     padding-left: 7px;
+    color: #333;
 }
+
+.togglebutton {
+    justify-content: center;
+    width: 25%;
+}
+
+#toggle-list {
+    width: 100%;
+    background-color: #3367D6;
+    list-style-type: none;
+    height: 2em;
+}
+
+#toggle-list li {
+    margin: -7px;
+}
+
+.btn-success a {
+    color: #fff;
+}
+/*
+.togglebutton {
+    background-color: #4285F4;
+
+}*/
+
+/*.nav-stacked {
+    background-color: #3367D6;
+    color: white;
+}*/
 
 hr {
     margin: 0;

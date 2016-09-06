@@ -164,7 +164,7 @@ app.MapView = function(){
             self.markers.push(marker);
 
             // Create an onclick event to open an infowindow at each marker.
-            marker.addListener('click', function() {
+            marker.addListener('mousedown', function() {
                 self.populateInfoWindow(this, self.infoWindow);
             });
 

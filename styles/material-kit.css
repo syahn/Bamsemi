@@ -1069,7 +1069,7 @@ fieldset[disabled] .form-group.is-focused .togglebutton label {
   left: 15px;
 }
 .togglebutton label input[type=checkbox]:checked + .toggle {
-  background-color: rgba(156, 39, 176, 0.7);
+  background-color: #3367D6;
 }
 .togglebutton label input[type=checkbox]:checked + .toggle:after {
   border-color: #3367D6;

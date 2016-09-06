@@ -48,18 +48,19 @@
                         <input id="hide-listings" class="btn btn-warning" type="button" value="Hide Listings">
                     </div>
 
-                    <ul class="nav nav-pills nav-stacked">
+                    <ul id="toggle-list" class="btn btn-success">
                       <li data-bind="click: toggleFilter" role="presentation"><a href="#">Brand Filter</a></li>
                     </ul>
+
                       <div class="filter-marker" data-bind="foreach: classes">
-                          <div data-bind="style: { display: $parent.showFilter() ? 'block' : 'none'}" class="togglebutton">
-                              <label><input type="checkbox" data-bind="checkedValue: $data.class, checked: $parent.currentFilter, click: $parent.activateFilter" /><span data-bind="text: $data.class"> Hollys</label>
+                          <div data-bind="style: { display: $parent.showFilter() ? 'flex' : 'none'}" class="togglebutton">
+                              <label><p data-bind="text: $data.class"> Hollys </p><input type="checkbox" data-bind="checkedValue: $data.class, checked: $parent.currentFilter, click: $parent.activateFilter" /></label>
                           </div>
                       </div>
 
-                    <ul class="nav nav-pills nav-stacked">
-                        <li role="presentation"><a href="#">Brand Filter</a></li>
-                    </ul>
+                    <!-- <ul class="nav nav-pills nav-pills-info" role="tablist">
+                        <li role="presentation" ><a href="#">Brand Filter</a></li>
+                    </ul> -->
 
                     <div class="item" data-bind="foreach:showCafes()">
                         <a href="#" class="item-title" data-bind="event: { mouseover: $parent.focusList, mouseout: $parent.unfocusList}, click: $parent.openInfoWindow, text: $data.name"></a>
