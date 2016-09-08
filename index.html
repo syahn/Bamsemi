@@ -45,7 +45,7 @@
 
                     <div class="toggle-marker">
                         <input id="show-listings" class="btn btn-info" type="button" value="Show Listings">
-                        <input id="hide-listings" class="btn btn-warning" type="button" value="Hide Listings">
+                        <input id="hide-listings" class="btn btn-default" type="button" value="Hide Listings">
                     </div>
 
                     <ul id="toggle-list" class="btn btn-success">
@@ -67,10 +67,10 @@
                         <hr>
                         <div class="item-content">
                             <div class="item-text">
+                                <span class="item-time" data-bind="text: $data.time"></span>
                                 <span class="item-address" data-bind="text: $data.address"></span>
                                 <span class="item-contact" data-bind="text: $data.contact"></span>
                             </div>
-                            <img class="item-img" src="" data-bind="attr: {src: $data.img}" alt="Undefined">
                         </div>
                     </div>
                 </div>

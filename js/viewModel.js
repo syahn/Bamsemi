@@ -7,13 +7,13 @@ app.ViewModel = function() {
     self.cafes = ko.observableArray(app.model.locations);
     self.showFilter = ko.observable(true);
     self.buttonClass = ko.observable(false);
-    self.currentFilter = ko.observableArray(["hollys","tomntoms","coffeesmith","individual"]);
+    self.currentFilter = ko.observableArray(["hollys","tomntoms","angelinus","coffeesmith"]);
 
     self.classes = ko.observableArray([
         {class: 'hollys'},
         {class: 'tomntoms'},
-        {class: 'coffeesmith'},
-        {class: 'individual'}]);
+        {class: 'angelinus'},
+        {class: 'coffeesmith'}]);
 
     self.focusList = function(place) {
         var index = self.findMarkerIndex(place);

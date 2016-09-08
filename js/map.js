@@ -143,7 +143,7 @@ app.MapView = function(){
             var position = new google.maps.LatLng(cafes[i].lat, cafes[i].lng);
             var name = cafes[i].name;
             var contact = cafes[i].contact;
-            var img = cafes[i].img;
+            var time = cafes[i].time;
             var address = cafes[i].address;
             var cafeClass = cafes[i].class;
             var cafeLogo = app.model.logos[cafeClass];
@@ -157,7 +157,7 @@ app.MapView = function(){
                 animation: google.maps.Animation.DROP,
                 contact: contact,
                 address: address,
-                img: img,
+                time: time,
                 visible: true
             });
             // Push the marker to our array of markers.
@@ -219,8 +219,8 @@ app.MapView = function(){
                     var tip = element.tips[0].text;
                     var url = element.tips[0].canonicalUrl;
 
-                    infowindow.setContent('<div><strong>' + marker.title + '</strong></div><div>' + marker.contact + '</div>' +
-                        '<img id="image-marker" src="' + marker.img + '"><div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
+                    infowindow.setContent('<div><strong>' + marker.title + '</strong></div><p>'+ marker.time +'</p><div><p>' + marker.address + '</p>' + marker.contact + '</div>' +
+                        '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
                         '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
 
                     $titleElem.html(venue);

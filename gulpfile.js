@@ -40,11 +40,11 @@ gulp.task('lint', function() {
 });
 
 gulp.task('responsive', function () {
-  return gulp.src('image/logo_foursquare.png')
+  return gulp.src(paths.images)
     .pipe(responsive({
-      'logo_foursquare.png': {
-        width: 100,
-        quality: 90
+      '*.png': {
+        width: 75,
+        quality: 80
       }
       }))
     .pipe(gulp.dest('dist'));

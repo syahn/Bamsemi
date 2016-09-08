@@ -8,8 +8,11 @@ app.Model = function() {
 
     self.locations = [];
     self.logos = {
-        "hollys" : "image/logo_hollys.png",
-        "tomntoms" : "image/logo_tomntoms.png"
+        "hollys" : "image/logo_hollys.svg",
+        "tomntoms" : "image/logo_tomntoms.svg",
+        "coffeesmith" : "image/logo_coffeesmith.svg",
+        "angelinus" : "image/logo_angelinus.svg"
+
     };
 
     self.init = function() {

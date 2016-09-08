@@ -14,6 +14,7 @@ html, body {
    margin-top: 0;
    margin-bottom: 6px;
  }
+
 /*---------------------------------------------*/
 
 header {
@@ -41,6 +42,11 @@ section {
 .form-group {
     display: flex;
     margin-top: 10px;
+    padding-bottom: 0;
+}
+
+#go-places {
+    background-color: #3367d6;
 }
 
 .toggle-marker {
@@ -48,7 +54,7 @@ section {
     justify-content: center;
 }
 
-.btn-info, .btn-warning {
+.btn-info, .btn-default {
     width: 50%;
     padding: 7px 10px;
 }
@@ -73,16 +79,22 @@ footer {
 }
 
 #show-listings {
-    font-size: 1.3vw;
-    padding-left: 7px;
+    font-size: 1vw;
+    padding: 4px 0;
+    height: 1.8em;
+    background-color: #1a9aff;
 }
 #hide-listings {
-    font-size: 1.3vw;
+    font-size: 1vw;
+    padding: 4px 0;
+    height: 1.8em;
+    background-color: #999;
 }
 
 .control-label {
     font-size: 1.4vw;
 }
+
 
 .options-box {
     border: 1px solid #999;
@@ -106,7 +118,7 @@ form-group.form-control {
 }
 
 #places-search {
-    width: 80%;
+    width: 83%;
 }
 
 .filter-marker {
@@ -183,11 +195,6 @@ hr {
 .item-title {
     font-size: 0.9em;
     font-weight: bold;
-}
-
-.item-img {
-    width: 33%;
-    height: 33%;
 }
 
 /*-----------------------------------------------*/
