@@ -1,6 +1,9 @@
 # Bamsemi: Find 24 hours cafe in Seoul
 
 This one-page web app is for the designers, developers, students, and all the people who need to find nearby 24-hour cafes.
+It's being hosted by the Firebase.
+
+[link] (https://bamsemi-efb21.firebaseapp.com)
 
 ### Features
 
