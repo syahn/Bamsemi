@@ -71,18 +71,12 @@ app.ViewModel = function() {
         var result = [],
             filteredCafes = [];
 
-        //If any filter doesn't get applied,
         if (self.currentFilter().length === 4){
             app.mv.markers.forEach(function(marker){
                 marker.setVisible(true);
             });
             return self.cafes();
-        //If any filter get applied,
-    } else if(self.currentFilter().length === 0){
-        app.mv.markers.forEach(function(marker){
-            marker.setVisible(false);
-        });
-    } else {
+        } else {
             self.currentFilter().forEach(function(filter){
                 for (var i = 0; i < self.cafes().length; i++){
                     app.mv.markers[i].setVisible(false);
