@@ -2,18 +2,24 @@ var app = app || {};
 
 
 app.ViewModel = function() {
+    "use strict";
+
     var self = this;
 
     self.cafes = ko.observableArray(app.model.locations);
     self.showFilter = ko.observable(true);
     self.buttonClass = ko.observable(false);
-    self.currentFilter = ko.observableArray(["hollys","tomntoms","angelinus","coffeesmith"]);
+    self.currentFilter = ko.observableArray(["hollys", "tomntoms", "angelinus", "coffeesmith"]);
 
-    self.classes = ko.observableArray([
-        {class: 'hollys'},
-        {class: 'tomntoms'},
-        {class: 'angelinus'},
-        {class: 'coffeesmith'}]);
+    self.classes = ko.observableArray([{
+        class: 'hollys'
+    }, {
+        class: 'tomntoms'
+    }, {
+        class: 'angelinus'
+    }, {
+        class: 'coffeesmith'
+    }]);
 
     //This function made markers bounce when connected list get mouseovered.
     self.focusList = function(place) {
@@ -30,7 +36,7 @@ app.ViewModel = function() {
     //This function pop up the infowindow once the lists clicked
     self.openInfoWindow = function(place) {
         var index = self.findMarkerIndex(place);
-        app.mv.populateInfoWindow(app.mv.markers[index], app.mv.infoWindow);
+        app.mv.populateInfoWindow(app.mv.markers[index], app.mv.infoWindow, app.model.locations[index]);
     };
 
     //This function returns the index of corresponding marker.
@@ -45,56 +51,56 @@ app.ViewModel = function() {
 
     //This function get activated when filter button clicked to activate
     // marker control function.
-    self.activateFilter = function(){
+    self.activateFilter = function() {
         self.showCafes();
         return true;
     };
 
     //This function find duplicated entities in a given array.
     self.eliminateDuplicates = function(arr) {
-      var i,
-          len=arr.length,
-          out=[],
-          obj={};
+        var i,
+            len = arr.length,
+            out = [],
+            obj = {};
 
-      for (i=0;i<len;i++) {
-        obj[arr[i]]=0;
-      }
-      for (i in obj) {
-        out.push(i);
-      }
-      return out;
+        for (i = 0; i < len; i++) {
+            obj[arr[i]] = 0;
+        }
+        for (i in obj) {
+            out.push(i);
+        }
+        return out;
     };
 
     //This function contorl markers and lists according to filter value.
-    self.showCafes = function(){
+    self.showCafes = function() {
         var result = [],
             filteredCafes = [];
 
         //If any filter doesn't get applied,
-        if (self.currentFilter().length === 4){
-            app.mv.markers.forEach(function(marker){
+        if (self.currentFilter().length === 4) {
+            app.mv.markers.forEach(function(marker) {
                 marker.setVisible(true);
             });
             return self.cafes();
-        //If any filter get applied,
-    } else if(self.currentFilter().length === 0){
-        app.mv.markers.forEach(function(marker){
-            marker.setVisible(false);
-        });
-    } else {
-            self.currentFilter().forEach(function(filter){
-                for (var i = 0; i < self.cafes().length; i++){
+            //If any filter get applied,
+        } else if (self.currentFilter().length === 0) {
+            app.mv.markers.forEach(function(marker) {
+                marker.setVisible(false);
+            });
+        } else {
+            self.currentFilter().forEach(function(filter) {
+                for (var i = 0; i < self.cafes().length; i++) {
                     app.mv.markers[i].setVisible(false);
                     var cafe = self.cafes()[i];
-                    if (cafe.class === filter){
+                    if (cafe.class === filter) {
                         filteredCafes.push(cafe);
                         result.push(i);
                     }
                 }
             });
 
-            self.eliminateDuplicates(result).forEach(function(i){
+            self.eliminateDuplicates(result).forEach(function(i) {
                 app.mv.markers[i].setVisible(true);
             });
 

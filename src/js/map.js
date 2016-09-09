@@ -1,7 +1,7 @@
 var app = app || {};
 
 
-app.MapView = function(){
+app.MapView = function() {
     "use strict";
 
     var self = this;
@@ -11,16 +11,18 @@ app.MapView = function(){
         self.markers = [];
         self.placeMarkers = [];
         self.map = new google.maps.Map(document.getElementById('map'), {
-            center: {lat: 37.566535, lng: 126.977969}, //default location: Seoul
+            center: {
+                lat: 37.566535,
+                lng: 126.977969
+            }, //default location: Seoul
             zoom: 12,
             mapTypeControl: false,
             streetViewControlOptions: {
-            position: google.maps.ControlPosition.LEFT_TOP
+                position: google.maps.ControlPosition.LEFT_TOP
             },
             zoomControlOptions: {
-              position: google.maps.ControlPosition.LEFT_CENTER
+                position: google.maps.ControlPosition.LEFT_CENTER
             }
-
         });
 
         // Initiate infoWindow object.
@@ -54,9 +56,6 @@ app.MapView = function(){
         var searchBox = new google.maps.places.SearchBox(
             document.getElementById('places-search'));
 
-        // Bias the searchbox to within the bounds of the map.
-        searchBox.setBounds(map.getBounds());
-
         // Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
             searchBox.setBounds(this.getBounds());
@@ -72,7 +71,8 @@ app.MapView = function(){
     // This function fires when the user selects a searchbox picklist item.
     // It will do a nearby search using the selected query string or place.
     self.searchBoxPlaces = function(searchBox) {
-        self.hideMarkers(placeMarkers);
+        self.hideMarkers(self.placeMarkers);
+
         var places = searchBox.getPlaces();
         if (places.length === 0) {
             window.alert('We did not find any places matching that search!');
@@ -86,13 +86,11 @@ app.MapView = function(){
     // It will do a nearby search using the entered query string or place.
     self.textSearchPlaces = function() {
         var bounds = self.map.getBounds();
-
         var placesService = new google.maps.places.PlacesService(self.map);
 
         placesService.textSearch({
             query: document.getElementById('places-search').value,
             bounds: bounds
-
         }, function(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 self.createMarkersForPlaces(results);
@@ -100,84 +98,71 @@ app.MapView = function(){
         });
     };
 
-    // This function populates markers when searbox value returned.
     self.createMarkersForPlaces = function(places) {
         var bounds = new google.maps.LatLngBounds();
-        for (var i = 0; i < places.length; i++) {
-            var place = places[i];
+        places.forEach(function(place) {
+            if (!place.geometry) {
+                console.log("Returned place contains no geometry");
+                return;
+            }
             var icon = {
                 url: place.icon,
-                size: new google.maps.Size(35, 35),
+                size: new google.maps.Size(71, 71),
                 origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(15, 34),
+                anchor: new google.maps.Point(17, 34),
                 scaledSize: new google.maps.Size(25, 25)
             };
+
             // Create a marker for each place.
-            var marker = new google.maps.Marker({
-                map: map,
+            self.placeMarkers.push(new google.maps.Marker({
+                map: self.map,
                 icon: icon,
                 title: place.name,
-                position: place.geometry.location,
-                id: place.place_id
-            });
+                position: place.geometry.location
+            }));
 
-            self.placeMarkers.push(marker);
             if (place.geometry.viewport) {
                 // Only geocodes have viewport.
                 bounds.union(place.geometry.viewport);
             } else {
                 bounds.extend(place.geometry.location);
             }
-        }
+        });
         self.map.fitBounds(bounds);
     };
-
 
     //This function renders markers.
     self.setMarkers = function(map, cafes) {
         // The following group uses the location array to create an array of markers on initialize.
 
-        for (var i = 0; i < cafes.length; i++){
-
-            // Get the information from the location array.
-            var position = new google.maps.LatLng(cafes[i].lat, cafes[i].lng);
-            var name = cafes[i].name;
-            var contact = cafes[i].contact;
-            var time = cafes[i].time;
-            var address = cafes[i].address;
-            var cafeClass = cafes[i].class;
+        cafes.forEach(function(cafe) {
+            var cafeClass = cafe.class;
             var cafeLogo = app.model.logos[cafeClass];
-            var defaultIcon = self.makeMarkerIcon(cafeLogo);
 
-            // Create a marker per location, and put into markers array.
-            var marker = new google.maps.Marker({
-                position: position,
-                title: name,
-                icon: defaultIcon,
-                animation: google.maps.Animation.DROP,
-                contact: contact,
-                address: address,
-                time: time,
-                visible: true
-            });
+            cafe.marker.setPosition(new google.maps.LatLng(cafe.lat, cafe.lng));
+            cafe.marker.setTitle(cafe.name);
+            cafe.marker.setIcon(self.makeMarkerIcon(cafeLogo));
+            cafe.marker.setAnimation(google.maps.Animation.DROP);
+            cafe.marker.setVisible(true);
+            cafe.marker.setDraggable(false);
+
             // Push the marker to our array of markers.
-            self.markers.push(marker);
+            self.markers.push(cafe.marker);
 
             // Create an onclick event to open an infowindow at each marker.
-            marker.addListener('mousedown', function() {
-                self.populateInfoWindow(this, self.infoWindow);
+            cafe.marker.addListener('mousedown', function() {
+                self.populateInfoWindow(this, self.infoWindow, cafe);
             });
 
-            marker.addListener('mouseover', function() {
+            cafe.marker.addListener('mouseup', function() {
                 this.setAnimation(google.maps.Animation.BOUNCE);
             });
 
-            marker.addListener('mouseout', function() {
+            cafe.marker.addListener('mouseout', function() {
                 this.setAnimation(null);
             });
+        });
 
-
-        }
     };
 
     // This function renders default marker icon accoring to cafe class
@@ -192,15 +177,11 @@ app.MapView = function(){
     };
 
     // This function populates the infowindow when the marker is clicked.
-    self.populateInfoWindow = function(marker, infowindow) {
+    self.populateInfoWindow = function(marker, infowindow, cafe) {
+        console.log(cafe);
         // Check to make sure the infowindow is not already opened on this marker.
-        if (infowindow.marker != marker) {
+        if (infowindow.marker !== marker) {
             infowindow.marker = marker;
-
-            // Request Foursquare information first.
-            var $titleElem = $('#titleFourSquare');
-            var $tipElem = $('#tipFourSquare');
-            var $urlElem = $('#urlFourSquare');
 
             this.urlFoursquare = "https://api.foursquare.com/v2/venues/explore";
             this.urlFoursquare += '?' + $.param({
@@ -212,23 +193,18 @@ app.MapView = function(){
 
             $.ajax({
                 url: this.urlFoursquare,
-                dataType: 'json',
-                success: function(data) {
-                    var element = data.response.groups[0].items[0];
-                    var venue = element.venue.name;
-                    var tip = element.tips[0].text;
-                    var url = element.tips[0].canonicalUrl;
+                dataType: "json"
+            }).done(function(data) {
+                var element = data.response.groups[0].items[0];
+                var venue = element.venue.name;
+                var tip = element.tips[0].text;
+                var url = element.tips[0].canonicalUrl;
 
-                    infowindow.setContent('<div><strong>' + marker.title + '</strong></div><p>'+ marker.time +'</p><div><p>' + marker.address + '</p>' + marker.contact + '</div>' +
-                        '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
-                        '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
+                infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>' +
+                    '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
+                    '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
 
-                    $titleElem.html(venue);
-                    $tipElem.text = tip;
-                    $tipElem.attr("href", url);
-
-                    infowindow.open(self.map, marker);
-                }
+                infowindow.open(self.map, marker);
             }).fail(function() {
                 alert("Somethings went wrong. Please, reload it.");
             });
@@ -239,31 +215,32 @@ app.MapView = function(){
             });
 
             // Deactivate infowindow when show listing button get clicked.
-            document.getElementById('show-listings').addEventListener('click', function(){
+            document.getElementById('show-listings').addEventListener('click', function() {
                 infowindow.close();
             });
         }
     };
 
     // This function will loop through the markers array and display them all.
-    self.showListings =function() {
+    self.showListings = function() {
         // Close infowindow which is already opened.
         self.infoWindow.marker = null;
 
         var bounds = new google.maps.LatLngBounds();
         // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < self.markers.length; i++) {
-            self.markers[i].setMap(self.map);
-            bounds.extend(self.markers[i].position);
-        }
+
+        self.markers.forEach(function(marker) {
+            marker.setMap(self.map);
+            bounds.extend(marker.position);
+        });
         self.map.fitBounds(bounds);
     };
 
     // This function will loop through the listings and hide them all.
     self.hideMarkers = function(markers) {
-        for (var i = 0; i < markers.length; i++) {
-            markers[i].setMap(null);
-        }
+        markers.forEach(function(marker) {
+            marker.setMap(null);
+        });
     };
 
 
@@ -296,16 +273,16 @@ app.MapView = function(){
         secondChild.id = 'you_location_img';
         firstChild.appendChild(secondChild);
 
-        google.maps.event.addListener(self.map, 'dragend', function() {
-            $('#you_location_img').css('background-position', '0px 0px');
-        });
+        // google.maps.event.addListener(self.map, 'dragend', function() {
+        //     $('#you_location_img').css('background-position', '0px 0px');
+        // });
 
         firstChild.addEventListener('click', function() {
             var imgX = '0';
             var animationInterval = setInterval(function() {
                 if (imgX == '-18') imgX = '0';
                 else imgX = '-18';
-                $('#you_location_img').css('background-position', imgX + 'px 0px');
+                document.getElementById('you_location_img').style['background-position'] = imgX + 'px 0px';
             }, 500);
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
@@ -313,11 +290,11 @@ app.MapView = function(){
                     self.map.setCenter(latlng);
                     self.map.setZoom(15);
                     clearInterval(animationInterval);
-                    $('#you_location_img').css('background-position', '-144px 0px');
+                    document.getElementById('you_location_img').style['background-position'] = '-144px 0px';
                 });
             } else {
                 clearInterval(animationInterval);
-                $('#you_location_img').css('background-position', '0px 0px');
+                document.getElementById('you_location_img').style['background-position'] = '0px 0px';
             }
         });
 

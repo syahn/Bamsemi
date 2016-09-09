@@ -1,0 +1,37 @@
+{
+  "name": "bamsemi",
+  "version": "0.0.1",
+  "description": "\"Find 24-hour cafe in Seoul\"",
+  "main": "index.js",
+  "dependencies": {
+    "grunt": "^1.0.1",
+    "grunt-responsive-images": "^0.1.9"
+  },
+  "devDependencies": {
+    "bower": "^1.7.9",
+    "gulp": "^3.9.1",
+    "gulp-beautify": "^2.0.0",
+    "gulp-clean-css": "^2.0.12",
+    "gulp-html-minify": "0.0.14",
+    "gulp-imagemin": "^3.0.3",
+    "gulp-jshint": "^2.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-responsive": "^2.5.0",
+    "gulp-uglify": "^2.0.0",
+    "jshint": "^2.9.3",
+    "pump": "^1.0.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/syahn/Bamsemi.git"
+  },
+  "author": "SY Ahn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/syahn/Bamsemi/issues"
+  },
+  "homepage": "https://github.com/syahn/Bamsemi#readme"
+}
