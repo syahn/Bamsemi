@@ -20,19 +20,19 @@ This web app is for the designers, developers, students, and all the people who 
 1. Download or clone the repository
 2. Install dependecis for setting up the task runner, Gulp.
   * Type following command in your terminal. It will set up all required dependencies for your development and production by package.json files
-'''
+```
 npm install
-'''
+```
 3. Next, type following command to set up automated workflow using the Grunt.
-'''
+```
 grunt
-'''
+```
 4. Cool! Everything for starting your work is set up. Just make changes in the src directory, then the changes automatically applied to files in the dist directory.
 5. Run the app locally in simple way.
   * Move to dist directory to use optimized version of the app, and type following command.
-'''
+```
 python -m SimpleHTTPServer
-'''
+```
   * Now, you can access the app via "localhost:8000" (This port number can be varied, pay attention to the terminal)
 6. That's it. Have fun!
 
