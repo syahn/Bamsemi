@@ -228,7 +228,12 @@ app.MapView = function() {
             marker.setMap(self.map);
             bounds.extend(marker.position);
         });
-        self.map.fitBounds(bounds);
+
+        // Make the markers responsively
+        window.onresize = function() {
+          self.map.fitBounds(bounds);
+        };
+
     };
 
     // This function will loop through the listings and hide them all.
@@ -267,10 +272,6 @@ app.MapView = function() {
         secondChild.style.backgroundRepeat = 'no-repeat';
         secondChild.id = 'you_location_img';
         firstChild.appendChild(secondChild);
-
-        // google.maps.event.addListener(self.map, 'dragend', function() {
-        //     $('#you_location_img').css('background-position', '0px 0px');
-        // });
 
         firstChild.addEventListener('click', function() {
             var imgX = '0';
