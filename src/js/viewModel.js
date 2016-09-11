@@ -25,6 +25,7 @@ app.ViewModel = function() {
     self.focusList = function(place) {
         var index = self.findMarkerIndex(place);
         app.mv.markers[index].setAnimation(google.maps.Animation.BOUNCE);
+
     };
 
     //This function made markers unbounce when connected list get mouseout.
@@ -33,9 +34,23 @@ app.ViewModel = function() {
         app.mv.markers[index].setAnimation(null);
     };
 
+    self.textSearchPlaces = function() {
+        return app.mv.textSearchPlaces();
+    };
+
+    self.showListings = function() {
+        app.mv.infoWindow.close(); // Deactivate infowindow
+        return app.mv.showListings();
+    };
+
+    self.hideMarkers = function() {
+        return app.mv.hideMarkers(app.mv.markers);
+    };
+
     //This function pop up the infowindow once the lists clicked
     self.openInfoWindow = function(place) {
         var index = self.findMarkerIndex(place);
+        // app.mv.markers[index].setAnimation(google.maps.Animation.BOUNCE);
         app.mv.populateInfoWindow(app.mv.markers[index], app.mv.infoWindow, app.model.locations[index]);
     };
 

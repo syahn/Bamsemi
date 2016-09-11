@@ -40,13 +40,6 @@ app.MapView = function() {
         // Initialize the markers on the landing-page.
         self.showListings();
 
-        // Listen for the event fired when the user selects a prediction and clicks
-        // "go" more details for that place.
-        document.getElementById('go-places').addEventListener('click', self.textSearchPlaces);
-        document.getElementById('show-listings').addEventListener('click', self.showListings);
-        document.getElementById('hide-listings').addEventListener('click', function() {
-            self.hideMarkers(self.markers);
-        });
     };
 
 
@@ -94,6 +87,8 @@ app.MapView = function() {
         }, function(results, status) {
             if (status === google.maps.places.PlacesServiceStatus.OK) {
                 self.createMarkersForPlaces(results);
+            } else {
+                window.alert('We did not find any places matching that search!');
             }
         });
     };

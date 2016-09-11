@@ -2,21 +2,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8" >
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' >
+
+    <link rel="icon" sizes="192x192" href="image/favicon_192.png">
 
     <title>Bamsemi: Find 24-hour cafe in the Seoul</title>
 
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
 
     <!--     Fonts and icons     -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" >
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" >
 
     <!-- CSS Files -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="styles/material-kit.css" rel="stylesheet" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/material-kit.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
 </head>
 
@@ -39,12 +41,12 @@
                     <div class="form-group label-floating">
                         <label class="control-label">Search for nearby cafe</label>
                         <input id="places-search" class="form-control" placeholder="" type="text">
-                        <input id="go-places" class="btn btn-default btn-sm" type="button" value="Go">
+                        <input id="go-places" class="btn btn-default btn-sm" data-bind="click:textSearchPlaces" type="button" value="Go">
                     </div>
 
                     <div class="toggle-marker">
-                        <input id="show-listings" class="btn btn-info" type="button" value="Show Listings">
-                        <input id="hide-listings" class="btn btn-default" type="button" value="Hide Listings">
+                        <input id="show-listings" class="btn btn-info" data-bind="click:showListings" type="button" value="Show Listings">
+                        <input id="hide-listings" class="btn btn-default" data-bind="click:hideMarkers" type="button" value="Hide Listings">
                     </div>
 
                     <ul id="toggle-list" class="btn btn-success">
@@ -56,7 +58,7 @@
                         <div data-bind="style: { display: $parent.showFilter() ? 'flex' : 'none'}" class="togglebutton">
                             <label>
                                 <p data-bind="text: $data.class"> Hollys </p>
-                                <input type="checkbox" data-bind="checkedValue: $data.class, checked: $parent.currentFilter, click: $parent.activateFilter" />
+                                <input type="checkbox" data-bind="checkedValue: $data.class, checked: $parent.currentFilter, click: $parent.activateFilter" >
                             </label>
                         </div>
                     </div>
@@ -66,7 +68,7 @@
                     </ul> -->
 
                     <div class="item" data-bind="foreach:showCafes()">
-                        <a href="#" class="item-title" data-bind="event: { mouseover: $parent.focusList, mouseout: $parent.unfocusList}, click: $parent.openInfoWindow, text: $data.name"></a>
+                        <a href="#" class="item-title" data-bind="event: {mouseout: $parent.unfocusList, mouseover: $parent.focusList}, click: $parent.openInfoWindow, text: $data.name"></a>
                         <hr>
                         <div class="item-content">
                             <div class="item-text">

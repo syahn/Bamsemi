@@ -7,10 +7,11 @@ var gulp = require('gulp'),
 	pump = require('pump'),
 	beautify = require('gulp-beautify'),
 	htmlminify = require("gulp-html-minify");
+    cssbeautify = require('gulp-cssbeautify');
 
 // Paths to various files
 var paths = {
-    scripts: ['src/js/*.js'],
+    scripts: ['src/js/**/*.js'],
     styles: ['src/styles/*.css'],
     images: ['src/image/*.{png,jpg,svg}'],
     content: ['src/index.html']
@@ -18,7 +19,7 @@ var paths = {
 
 
 gulp.task('build-html' , function(){
-    return gulp.src('dist/index.html')
+    return gulp.src('src/index.html')
         .pipe(htmlminify())
         .pipe(gulp.dest("dist/"));
 });
@@ -37,10 +38,16 @@ gulp.task('beautify', function() {
 });
 
 
+gulp.task('css-beautify', function() {
+    return gulp.src(paths.styles)
+        .pipe(cssbeautify())
+        .pipe(gulp.dest('src/styles'));;
+});
+
 gulp.task('imgOpt', () =>
     gulp.src(paths.images)
         .pipe(imagemin())
-        .pipe(gulp.dest('dist/images'))
+        .pipe(gulp.dest('dist/image'))
 );
 
 gulp.task('compress', function (cb) {
@@ -72,10 +79,10 @@ gulp.task('responsive', function () {
 
 
 gulp.task('watch', function(){
+	gulp.watch('src/index.html', ['build-html']);
 	gulp.watch(paths.scripts, ['compress']);
 	gulp.watch(paths.styles, ['minify-css']);
-	gulp.watch(paths.lint, ['lint']);
 	gulp.watch(paths.images, ['imgOpt']);
 });
 
-gulp.task('default', ['beautify', 'compress', 'build-html', 'minify-css']);
+gulp.task('default', ['css-beautify', 'beautify', 'watch', 'compress', 'build-html', 'minify-css', 'imgOpt']);
