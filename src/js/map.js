@@ -231,7 +231,7 @@ app.MapView = function() {
 
         // Make the markers responsively
         window.onresize = function() {
-          self.map.fitBounds(bounds);
+            self.map.fitBounds(bounds);
         };
 
     };
