@@ -1,5 +1,3 @@
-
-
 html,
 body {
     font-family: roboto, sans-serif;
@@ -92,7 +90,6 @@ section {
     display: none;
 }
 
-
 .form-control {
     color: #3367D6;
 }
@@ -106,7 +103,7 @@ section {
 
 #hide-listings,
 #show-listings,
-#toggle-list{
+#toggle-list {
     display: none;
 }
 
@@ -155,11 +152,11 @@ label>p {
 /*06. Footer---------------------------------------------*/
 
 footer {
+    font-size: 11px;
     border-top: 1px solid grey;
     padding-top: 10px;
     text-align: right;
 }
-
 
 
 /*-----------------------------------------------*/

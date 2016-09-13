@@ -12,7 +12,7 @@ app.MapView = function() {
         self.placeMarkers = [];
         self.locationDefault = new google.maps.LatLng(37.566535, 126.977969);
         self.map = new google.maps.Map(document.getElementById('map'), {
-            center:  self.locationDefault, //default location: Seoul
+            center: self.locationDefault, //default location: Seoul
             zoom: 12,
             mapTypeControl: false,
             streetViewControlOptions: {
@@ -124,9 +124,9 @@ app.MapView = function() {
             }
         });
 
-                window.onresize = function() {
-                    self.map.fitBounds(bounds);
-                };
+        window.onresize = function() {
+            self.map.fitBounds(bounds);
+        };
         // self.map.fitBounds(bounds);
     };
 
@@ -182,9 +182,9 @@ app.MapView = function() {
         if (infowindow.marker !== marker) {
             infowindow.marker = marker;
 
-                infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>');
+            infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>');
 
-                infowindow.open(self.map, marker);
+            infowindow.open(self.map, marker);
 
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function() {
