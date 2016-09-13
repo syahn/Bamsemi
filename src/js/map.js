@@ -178,31 +178,29 @@ app.MapView = function() {
         if (infowindow.marker !== marker) {
             infowindow.marker = marker;
 
-            this.urlFoursquare = "https://api.foursquare.com/v2/venues/explore";
-            this.urlFoursquare += '?' + $.param({
-                'client_id': 'T51K4CHANN5MBOX5DA2ANBWHRUS54LYEKTQY2KO3U4GSRFDP',
-                'client_secret': 'SXWDCUMXYS2EDYVYHSTXWCVLOAGW0MWQTX4WBAO2F2KVNQ5C',
-                'll': marker.position.toUrlValue(),
-                'v': '20140806'
-            });
+            // this.urlFoursquare = "https://api.foursquare.com/v2/venues/explore";
+            // this.urlFoursquare += '?' + $.param({
+            //     'client_id': 'T51K4CHANN5MBOX5DA2ANBWHRUS54LYEKTQY2KO3U4GSRFDP',
+            //     'client_secret': 'SXWDCUMXYS2EDYVYHSTXWCVLOAGW0MWQTX4WBAO2F2KVNQ5C',
+            //     'll': marker.position.toUrlValue(),
+            //     'v': '20140806'
+            // });
+            //
+            // $.ajax({
+            //     url: this.urlFoursquare,
+            //     dataType: "json"
+            // }).done(function(data) {
+            //     var element = data.response.groups[0].items[0];
+            //     var venue = element.venue.name;
+            //     var tip = element.tips[0].text;
+            //     var url = element.tips[0].canonicalUrl;
 
-            $.ajax({
-                url: this.urlFoursquare,
-                dataType: "json"
-            }).done(function(data) {
-                var element = data.response.groups[0].items[0];
-                var venue = element.venue.name;
-                var tip = element.tips[0].text;
-                var url = element.tips[0].canonicalUrl;
-
-                infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>' +
-                    '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
-                    '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
+                // infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>' +
+                //     '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
+                //     '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
+                infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>');
 
                 infowindow.open(self.map, marker);
-            }).fail(function() {
-                alert("Somethings went wrong. Please, reload it.");
-            });
 
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function() {

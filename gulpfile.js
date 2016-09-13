@@ -6,7 +6,7 @@ var gulp = require('gulp'),
 	responsive = require('gulp-responsive'),
 	pump = require('pump'),
 	beautify = require('gulp-beautify'),
-	htmlminify = require("gulp-html-minify");
+	htmlminify = require("gulp-html-minify"),
     cssbeautify = require('gulp-cssbeautify');
 
 // Paths to various files
