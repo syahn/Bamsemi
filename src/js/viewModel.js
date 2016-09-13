@@ -12,9 +12,9 @@ app.ViewModel = function() {
     self.currentFilter = ko.observableArray(["hollys", "tomntoms", "angelinus", "coffeesmith"]);
 
     self.classes = ko.observableArray([{
-        class: 'hollys'
-    }, {
         class: 'tomntoms'
+    }, {
+        class: 'hollys'
     }, {
         class: 'angelinus'
     }, {

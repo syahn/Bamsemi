@@ -20,7 +20,8 @@
     <!-- CSS Files -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
     <link href="styles/material-kit.css" rel="stylesheet">
-    <link href="styles/main.css" rel="stylesheet">
+    <link media="(max-width: 420px)" href="styles/mobile.css" rel="stylesheet">
+    <link media="(min-width: 421px)" href="styles/desktop.css" rel="stylesheet">
 </head>
 
 <body>
@@ -47,7 +48,7 @@
             <main class="map-container col-xs-12 col-sm-8 col-md-8">
                 <div id="map"></div>
             </main>
-            <div id="section-side" class="col-xs-12 col-sm-4 col-md-4">
+            <div id="control-container" class="col-xs-12 col-sm-4 col-md-4">
                 <div class="options-box">
                     <div class="form-group label-floating">
                         <label class="control-label">어디에 있을까나?</label>
@@ -68,15 +69,12 @@
                     <div class="filter-marker" data-bind="foreach: classes">
                         <div data-bind="style: { display: $parent.showFilter() ? 'flex' : 'none'}" class="togglebutton">
                             <label>
-                                <p data-bind="text: $data.class"> Hollys </p>
+                                <p data-bind="text: $data.class"></p>
+                                <hr>
                                 <input type="checkbox" data-bind="checkedValue: $data.class, checked: $parent.currentFilter, click: $parent.activateFilter" >
                             </label>
                         </div>
                     </div>
-
-                    <!-- <ul class="nav nav-pills nav-pills-info" role="tablist">
-                        <li role="presentation" ><a href="#">Brand Filter</a></li>
-                    </ul> -->
 
                     <div class="item" data-bind="foreach:showCafes()">
                         <a href="#" class="item-title" data-bind="event: {mouseout: $parent.unfocusList, mouseover: $parent.focusList}, click: $parent.openInfoWindow, text: $data.name"></a>
@@ -92,9 +90,11 @@
                 </div>
             </div>
 
-            <!-- <aside></aside> -->
         </section>
-        <footer></footer>
+        <footer>
+            <span>made by </span><img src="image/logo_frankhaus.svg" >
+
+        </footer>
     </div>
 
     <!--   Core JS Files   -->

@@ -10,11 +10,9 @@ app.MapView = function() {
     self.initMap = function() {
         self.markers = [];
         self.placeMarkers = [];
+        self.locationDefault = new google.maps.LatLng(37.566535, 126.977969);
         self.map = new google.maps.Map(document.getElementById('map'), {
-            center: {
-                lat: 37.566535,
-                lng: 126.977969
-            }, //default location: Seoul
+            center:  self.locationDefault, //default location: Seoul
             zoom: 12,
             mapTypeControl: false,
             streetViewControlOptions: {
@@ -24,6 +22,7 @@ app.MapView = function() {
                 position: google.maps.ControlPosition.LEFT_CENTER
             }
         });
+
 
         // Initiate infoWindow object.
         self.infoWindow = new google.maps.InfoWindow();
@@ -39,6 +38,7 @@ app.MapView = function() {
 
         // Initialize the markers on the landing-page.
         self.showListings();
+
 
     };
 
@@ -123,7 +123,11 @@ app.MapView = function() {
                 bounds.extend(place.geometry.location);
             }
         });
-        self.map.fitBounds(bounds);
+
+                window.onresize = function() {
+                    self.map.fitBounds(bounds);
+                };
+        // self.map.fitBounds(bounds);
     };
 
     //This function renders markers.
@@ -178,26 +182,6 @@ app.MapView = function() {
         if (infowindow.marker !== marker) {
             infowindow.marker = marker;
 
-            // this.urlFoursquare = "https://api.foursquare.com/v2/venues/explore";
-            // this.urlFoursquare += '?' + $.param({
-            //     'client_id': 'T51K4CHANN5MBOX5DA2ANBWHRUS54LYEKTQY2KO3U4GSRFDP',
-            //     'client_secret': 'SXWDCUMXYS2EDYVYHSTXWCVLOAGW0MWQTX4WBAO2F2KVNQ5C',
-            //     'll': marker.position.toUrlValue(),
-            //     'v': '20140806'
-            // });
-            //
-            // $.ajax({
-            //     url: this.urlFoursquare,
-            //     dataType: "json"
-            // }).done(function(data) {
-            //     var element = data.response.groups[0].items[0];
-            //     var venue = element.venue.name;
-            //     var tip = element.tips[0].text;
-            //     var url = element.tips[0].canonicalUrl;
-
-                // infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>' +
-                //     '<div><hr><span>Nearby hot place by</span><img src="image/logo_foursquare.png" alt="Oops!"><br><span><strong>' + venue +
-                //     '</strong></span><p>' + tip + '</p><a href="' + url + '">Link</a></div>');
                 infowindow.setContent('<div><strong>' + cafe.name + '</strong></div><p>' + cafe.time + '</p><div><p>' + cafe.address + '</p>' + cafe.contact + '</div>');
 
                 infowindow.open(self.map, marker);
@@ -220,17 +204,18 @@ app.MapView = function() {
         self.infoWindow.marker = null;
 
         var bounds = new google.maps.LatLngBounds();
-        // Extend the boundaries of the map for each marker and display the marker
 
+        // Extend the boundaries of the map for each marker and display the marker
         self.markers.forEach(function(marker) {
             marker.setMap(self.map);
             bounds.extend(marker.position);
         });
 
         // Make the markers responsively
-        window.onresize = function() {
-            self.map.fitBounds(bounds);
-        };
+
+        self.map.fitBounds(bounds);
+
+
 
     };
 
