@@ -4,7 +4,7 @@ This web app is for the designers, developers, students, and all the people who 
 
 ## Online
 
-<a href="https://bamsemi-efb21.firebaseapp.com" target="_blank">Bamsemi</a>
+<a href="https://bamsemi.xyz/" target="_blank">Bamsemi</a>
 
 
 ## Features
